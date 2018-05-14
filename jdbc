@@ -1,0 +1,166 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
+
+public class PrepareStatementEx{
+	public static void main(String args[]) throws SQLException, ClassNotFoundException 
+	{
+//		  List<PreparedStatementModel> modelstatus(name) {
+//			    String queryString = "FROM cus1_hamsa cushamsa WHERE cushamsa.name = " + name;
+////			    Query queryObject = currentSession().createQuery(queryString);
+////			    return queryObject.list();
+////			  }
+//		  
+//		 
+////		return currentSession()
+////				    .createQuery("FROM PreparedStatementModel model WHERE model.name = :name")
+////				    .setParameter("name",name)
+////				    .list();
+		
+		
+//		Criteria cr = session.createCriteria(PreparedStatementModel.class);
+//		List results = cr.list();
+//		System.out.println(results);
+		
+		String dbURL = "jdbc:oracle:thin:@10.100.1.95:1539:KGFSL12C";
+		String username = "DEVRMSV2";
+     	String password = "DEVRMSV2";
+		Connection conn=null;
+		 
+		try 
+		   {
+			    Class.forName("oracle.jdbc.driver.OracleDriver");
+			    conn = DriverManager.getConnection(dbURL, username, password);
+		        if (conn != null) 
+		        {
+		               System.out.println("Connected");
+		        }
+		   } 
+		catch (SQLException ex) 
+		   {
+		        ex.printStackTrace();
+		   }
+
+		
+       
+        /*Insertion*/
+        String sql = "INSERT INTO cus1_hamsa (name,age,designation) VALUES (?, ?, ?)";
+		PreparedStatement statement = conn.prepareStatement(sql);
+		statement.setString(1,"hamsa");
+		statement.setString(2,"23");
+		statement.setString(3, "B-tech");
+		int rowsInserted = statement.executeUpdate();
+		if (rowsInserted > 0) 
+		{
+		    System.out.println("A new user was inserted successfully!");
+		}
+		System.out.println("***************************************");
+		
+
+        /*view*/
+      
+        System.out.println("After Insertion");
+        
+        String sql1 = "SELECT * FROM cus1_hamsa";
+		Statement statement1 = conn.createStatement();
+		ResultSet result = statement1.executeQuery(sql1);
+		
+		while (result.next())
+		{
+		    String name = result.getString(1);
+		    System.out.println(name);
+		    String age = result.getString(2);
+		    System.out.println(age);
+		    String designation = result.getString(3);
+		    System.out.println(designation);
+		}
+		System.out.println("***************************************");  
+
+
+        /*Updation*/
+		String sql2 = "UPDATE cus1_hamsa SET age=?,designation=? WHERE name=?";
+		PreparedStatement statement2 = conn.prepareStatement(sql2);
+		statement2.setString(1, "12");
+		statement2.setString(2, "Manager");
+		statement2.setString(3, "hamsa");
+		
+		int rowsUpdated = statement2.executeUpdate();
+		if (rowsUpdated > 0) {
+		    System.out.println("An existing user was updated successfully!");
+		}
+		
+		
+		/*After updation-view*/
+		
+		
+	    System.out.println("After Updation");
+	    
+		String sql4 = "SELECT * FROM cus1_hamsa";
+		Statement statement4 = conn.createStatement();
+		ResultSet result4 = statement4.executeQuery(sql4);
+			
+		while (result4.next())
+		{
+			    String name = result4.getString(1);
+			    System.out.println(name);
+			    String age = result4.getString(2);
+			    System.out.println(age);
+			    String designation = result4.getString(3);
+			    System.out.println(designation);
+			  
+		 }
+		System.out.println("***************************************");
+       
+
+		/*Deletion*/	
+		String sql3 = "DELETE FROM cus1_hamsa WHERE name=?";
+		PreparedStatement statement3 = conn.prepareStatement(sql3);
+		statement3.setString(1, "hamsa");
+		int rowsDeleted = statement3.executeUpdate();
+		if (rowsDeleted > 0) {
+		    System.out.println("A user was deleted successfully!");
+		}
+		
+		
+		/*After deletion-view*/
+		
+	    System.out.println("After Deletion");
+	    
+		 String sql5 = "SELECT * FROM cus1_hamsa";
+		 Statement statement5 = conn.createStatement();
+		 ResultSet result5 = statement5.executeQuery(sql5);
+	     while (result5.next())
+	     {
+			    String name = result5.getString(1);
+			    System.out.println(name);
+			    String age = result5.getString(2);
+			    System.out.println(age);
+			    String designation = result5.getString(3);
+			    System.out.println(designation);
+			   
+			   
+			}
+		     
+		
+		conn.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
